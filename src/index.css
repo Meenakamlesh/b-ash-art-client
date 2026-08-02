@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --maroon: #8a1a29;
+  --maroon-deep: #6e1420;
+  --brass: #b78544;
+  --ink: #2b211b;
+  --ivory: #faf6ec;
+  --sandalwood: #f1e6cf;
+  --sage: #6b7d5a;
+  --line: #e6d9ba;
+  --muted: #877a63;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: var(--ivory);
+  color: var(--ink);
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; }
+img { display: block; max-width: 100%; }
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 6px;
+  padding: 13px 26px;
+  font-size: 14.5px;
+  font-weight: 600;
+  transition: all .2s ease;
+}
+.btn-primary { background: var(--maroon); color: #fff; }
+.btn-primary:hover { background: var(--maroon-deep); }
+.btn-outline { border: 1.5px solid var(--maroon); color: var(--maroon); background: transparent; }
+.btn-outline:hover { background: var(--maroon); color: #fff; }
+
+.prod-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+@media (max-width: 1024px) {
+  .prod-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+
+.color-swatch {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  cursor: pointer;
+}
+.color-swatch.selected { border-color: var(--maroon); }
+
+.qty-stepper {
+  display: flex; align-items: center;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.qty-stepper button {
+  width: 32px; height: 34px;
+  font-size: 16px; color: var(--maroon);
+  background: #fff;
+}
+.qty-stepper button:hover { background: var(--sandalwood); }
+.qty-stepper .val {
+  width: 32px; text-align: center;
+  font-weight: 600; font-size: 13.5px;
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .hero-title { font-size: 28px !important; }
+}
+@media (max-width: 900px) {
+  .cart-layout { grid-template-columns: 1fr !important; }
+}
+.pd-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  padding: 40px 24px 80px;
+}
+@media (max-width: 800px) {
+  .pd-detail-grid { grid-template-columns: 1fr; gap: 24px; }
+}
