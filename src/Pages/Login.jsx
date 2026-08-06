@@ -36,7 +36,7 @@ export default function Login() {
         Welcome back
       </h1>
       <p style={{ textAlign: "center", color: "var(--muted)", fontSize: 14, marginBottom: 32 }}>
-        Log in to your Hastnirmit account
+        Log in to your B Ash Art account
       </p>
 
       {error && (
