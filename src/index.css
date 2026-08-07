@@ -99,3 +99,52 @@ img { display: block; max-width: 100%; }
 @media (max-width: 800px) {
   .pd-detail-grid { grid-template-columns: 1fr; gap: 24px; }
 }
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: white;
+}
+
+.qty-stepper button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: background 0.2s;
+}
+
+.qty-stepper button:hover {
+  background: var(--sandalwood);
+}
+
+.qty-stepper button:active {
+  background: #d4c5a9;
+}
+
+.qty-stepper .val {
+  min-width: 40px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+/* Remove number input arrows */
+.qty-stepper input[type="number"]::-webkit-inner-spin-button,
+.qty-stepper input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.qty-stepper input[type="number"] {
+  -moz-appearance: textfield;
+}
