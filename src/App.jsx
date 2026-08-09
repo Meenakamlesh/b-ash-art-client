@@ -1,17 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import ProductDetail from "./pages/ProductDetail";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Cart from "./pages/Cart";
-import OrderConfirmed from "./pages/OrderConfirmed";
+import Home from "./Pages/Home";
+import Products from "./Pages/Products";
+import ProductDetail from "./Pages/ProductDetail";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import Cart from "./Pages/Cart";
+import OrderConfirmed from "./Pages/OrderConfirmed";
 import AdminRoute from "./components/AdminRoute";
-import AdminLayout from "./pages/admin/AdminLayout";
-import AdminProducts from "./pages/admin/AdminProducts";
-import AdminInventory from "./pages/admin/AdminInventory";
-import AdminOrders from "./pages/admin/AdminOrders";
+import AdminLayout from "./Pages/admin/AdminLayout";
+import AdminProducts from "./Pages/admin/AdminProducts";
+import AdminInventory from "./Pages/admin/AdminInventory";
+import AdminOrders from "./Pages/admin/AdminOrders";
 
 function App() {
   return (
