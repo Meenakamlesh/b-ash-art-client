@@ -148,12 +148,3 @@ img { display: block; max-width: 100%; }
 .qty-stepper input[type="number"] {
   -moz-appearance: textfield;
 }
-.pd-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 50px;
-  padding: 40px 24px 80px;
-}
-@media (max-width: 800px) {
-  .pd-detail-grid { grid-template-columns: 1fr; gap: 24px; }
-}
