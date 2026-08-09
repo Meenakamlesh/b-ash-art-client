@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
-import { Plus, Pencil, Trash2, X } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ChevronDown, ChevronUp } from "lucide-react";
 
 const sanitizeColorKey = (color) => color.trim().toLowerCase().replace(/\s+/g, "_");
 
@@ -14,6 +14,17 @@ export default function AdminProducts() {
   const [colorStockData, setColorStockData] = useState({});
   const [existingVariants, setExistingVariants] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [expandedRows, setExpandedRows] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const colorsList = colorsInput.split(",").map((c) => c.trim()).filter(Boolean);
 
@@ -101,26 +112,64 @@ export default function AdminProducts() {
     }
   };
 
+  const toggleRowExpand = (id) => {
+    setExpandedRows(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   return (
-    <div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <h1 style={{ fontFamily: "Fraunces, serif", fontSize: 24, fontWeight: 700 }}>Products</h1>
-        <button className="btn btn-primary" onClick={() => { resetForm(); setShowForm(true); }}>
+    <div className="admin-products" style={{ padding: "0 0 20px 0" }}>
+      <div style={{ 
+        display: "flex", 
+        flexDirection: isMobile ? "column" : "row",
+        justifyContent: "space-between", 
+        alignItems: isMobile ? "stretch" : "center", 
+        gap: isMobile ? 12 : 0,
+        marginBottom: 24 
+      }}>
+        <h1 style={{ 
+          fontFamily: "Fraunces, serif", 
+          fontSize: isMobile ? 20 : 24, 
+          fontWeight: 700 
+        }}>
+          Products
+        </h1>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => { resetForm(); setShowForm(true); }}
+          style={{ width: isMobile ? "100%" : "auto" }}
+        >
           <Plus size={16} /> Add Product
         </button>
       </div>
 
       {showForm && (
-        <div style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: 12, padding: 22, marginBottom: 26 }}>
+        <div style={{ 
+          background: "#fff", 
+          border: "1px solid var(--line)", 
+          borderRadius: 12, 
+          padding: isMobile ? 16 : 22, 
+          marginBottom: 26 
+        }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 16 }}>
-            <h3 style={{ fontFamily: "Fraunces, serif", fontSize: 17, fontWeight: 700 }}>
+            <h3 style={{ 
+              fontFamily: "Fraunces, serif", 
+              fontSize: isMobile ? 16 : 17, 
+              fontWeight: 700 
+            }}>
               {editingId ? "Edit Product" : "Add New Product"}
             </h3>
             <X size={18} style={{ cursor: "pointer" }} onClick={resetForm} />
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-            <div>
+          <form onSubmit={handleSubmit} style={{ 
+            display: "grid", 
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", 
+            gap: 14 
+          }}>
+            <div style={{ gridColumn: isMobile ? "1 / -1" : "auto" }}>
               <label style={labelStyle}>Product Name *</label>
               <input 
                 required 
@@ -130,7 +179,7 @@ export default function AdminProducts() {
                 placeholder="Enter product name"
               />
             </div>
-            <div>
+            <div style={{ gridColumn: isMobile ? "1 / -1" : "auto" }}>
               <label style={labelStyle}>Price (₹) *</label>
               <input 
                 required 
@@ -188,25 +237,33 @@ export default function AdminProducts() {
                     return (
                       <div key={color} style={{ 
                         display: "grid", 
-                        gridTemplateColumns: "60px 100px 1fr 120px", 
+                        gridTemplateColumns: isMobile ? "1fr" : "60px 100px 1fr 120px",
                         alignItems: "center", 
-                        gap: 12,
-                        padding: 12,
+                        gap: isMobile ? 10 : 12,
+                        padding: isMobile ? 14 : 12,
                         background: "var(--sandalwood)",
                         borderRadius: 8
                       }}>
                         <div style={{ 
-                          width: 48, 
-                          height: 48, 
+                          width: isMobile ? 60 : 48, 
+                          height: isMobile ? 60 : 48, 
                           borderRadius: 6, 
                           overflow: "hidden", 
                           background: "#fff",
-                          border: "1px solid var(--line)"
+                          border: "1px solid var(--line)",
+                          justifySelf: isMobile ? "center" : "start"
                         }}>
                           {previewUrl && <img src={previewUrl} alt={color} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                         </div>
                         
-                        <span style={{ fontSize: 14, fontWeight: 600, textTransform: "capitalize" }}>{color}</span>
+                        <span style={{ 
+                          fontSize: isMobile ? 15 : 14, 
+                          fontWeight: 600, 
+                          textTransform: "capitalize",
+                          textAlign: isMobile ? "center" : "left"
+                        }}>
+                          {color}
+                        </span>
                         
                         <input
                           type="file"
@@ -217,10 +274,18 @@ export default function AdminProducts() {
                               setColorFiles((prev) => ({ ...prev, [color]: file }));
                             }
                           }}
-                          style={{ fontSize: 12.5 }}
+                          style={{ 
+                            fontSize: isMobile ? 12 : 12.5,
+                            width: "100%"
+                          }}
                         />
                         
-                        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div style={{ 
+                          display: "flex", 
+                          alignItems: "center", 
+                          gap: 6,
+                          justifyContent: isMobile ? "center" : "flex-start"
+                        }}>
                           <label style={{ fontSize: 12, fontWeight: 500, whiteSpace: "nowrap" }}>Stock:</label>
                           <input
                             type="number"
@@ -231,7 +296,7 @@ export default function AdminProducts() {
                               setColorStockData(prev => ({ ...prev, [key]: val }));
                             }}
                             style={{ 
-                              width: 70, 
+                              width: isMobile ? 80 : 70, 
                               padding: "6px 10px", 
                               border: "1px solid var(--line)", 
                               borderRadius: 4, 
@@ -250,7 +315,8 @@ export default function AdminProducts() {
                   background: "#f0f0f0", 
                   borderRadius: 6,
                   fontSize: 13,
-                  fontWeight: 600
+                  fontWeight: 600,
+                  textAlign: "center"
                 }}>
                   Total Stock: {colorsList.reduce((sum, color) => sum + (colorStockData[sanitizeColorKey(color)] || 0), 0)}
                 </div>
@@ -272,7 +338,7 @@ export default function AdminProducts() {
             <button 
               type="submit" 
               className="btn btn-primary" 
-              style={{ gridColumn: "1 / -1", padding: "12px" }} 
+              style={{ gridColumn: "1 / -1", padding: "14px", fontSize: isMobile ? 15 : 14 }} 
               disabled={loading}
             >
               {loading ? "Saving..." : editingId ? "Update Product" : "Create Product"}
@@ -281,69 +347,220 @@ export default function AdminProducts() {
         </div>
       )}
 
-      <div style={{ background: "#fff", border: "1px solid var(--line)", borderRadius: 12, overflow: "hidden" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13.5 }}>
-          <thead>
-            <tr style={{ background: "var(--sandalwood)", textAlign: "left" }}>
-              <th style={thStyle}>Image</th>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Price</th>
-              <th style={thStyle}>Stock</th>
-              <th style={thStyle}>Colors</th>
-              <th style={thStyle}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p.id} style={{ borderTop: "1px solid var(--line)" }}>
-                <td style={tdStyle}>
-                  <div style={{ width: 44, height: 44, borderRadius: 6, overflow: "hidden", background: "var(--sandalwood)" }}>
-                    {p.imageUrl && <img src={p.imageUrl} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                  </div>
-                </td>
-                <td style={tdStyle}>{p.name}</td>
-                <td style={tdStyle}>₹{p.price}</td>
-                <td style={tdStyle}>
-                  <span style={{ color: p.stock <= 5 ? "#b5555c" : "var(--sage)", fontWeight: 600 }}>{p.stock}</span>
-                  {p.variants && p.variants.length > 0 && (
-                    <div style={{ fontSize: 11, color: "#666", marginTop: 4 }}>
-                      {p.variants.map(v => `${v.color}: ${v.stock}`).join(" | ")}
+      {/* Products Table - Mobile Optimized */}
+      <div style={{ 
+        background: "#fff", 
+        border: "1px solid var(--line)", 
+        borderRadius: 12, 
+        overflow: "hidden",
+        width: "100%"
+      }}>
+        {isMobile ? (
+          // Mobile Card View
+          <div style={{ padding: "12px" }}>
+            {products.map((p) => {
+              const isExpanded = expandedRows[p.id] || false;
+              return (
+                <div key={p.id} style={{
+                  border: "1px solid var(--line)",
+                  borderRadius: 8,
+                  marginBottom: 12,
+                  padding: 14,
+                  background: "#fff"
+                }}>
+                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                    <div style={{ 
+                      width: 50, 
+                      height: 50, 
+                      borderRadius: 6, 
+                      overflow: "hidden", 
+                      background: "var(--sandalwood)",
+                      flexShrink: 0
+                    }}>
+                      {p.imageUrl && <img src={p.imageUrl} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     </div>
-                  )}
-                </td>
-                <td style={tdStyle}>
-                  {(p.colors || []).length > 0 ? (
-                    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                      {(p.colors || []).map(c => (
-                        <span key={c} style={{ 
-                          background: "var(--sandalwood)", 
-                          padding: "2px 8px", 
-                          borderRadius: 4, 
-                          fontSize: 11,
-                          textTransform: "capitalize"
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontWeight: 600, fontSize: 14 }}>{p.name}</div>
+                      <div style={{ color: "var(--maroon)", fontWeight: 700, fontSize: 15 }}>₹{p.price}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
+                        <span style={{ 
+                          fontSize: 12, 
+                          fontWeight: 600,
+                          color: p.stock <= 5 ? "#b5555c" : "var(--sage)"
                         }}>
-                          {c}
+                          Stock: {p.stock}
                         </span>
+                        {p.variants && p.variants.length > 0 && (
+                          <button
+                            onClick={() => toggleRowExpand(p.id)}
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              fontSize: 11,
+                              color: "var(--muted)"
+                            }}
+                          >
+                            {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                            {p.variants.length} colors
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                      <Pencil size={16} style={{ cursor: "pointer" }} onClick={() => handleEdit(p)} />
+                      <Trash2 size={16} style={{ cursor: "pointer", color: "#b5555c" }} onClick={() => handleDelete(p.id)} />
+                    </div>
+                  </div>
+                  
+                  {isExpanded && p.variants && p.variants.length > 0 && (
+                    <div style={{ 
+                      marginTop: 12, 
+                      paddingTop: 12, 
+                      borderTop: "1px solid var(--line)",
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: 8
+                    }}>
+                      {p.variants.map((v, idx) => (
+                        <div key={idx} style={{
+                          background: "var(--sandalwood)",
+                          padding: "8px 10px",
+                          borderRadius: 6,
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center"
+                        }}>
+                          <span style={{ 
+                            textTransform: "capitalize", 
+                            fontSize: 12,
+                            fontWeight: 500
+                          }}>
+                            {v.color}
+                          </span>
+                          <span style={{ 
+                            fontWeight: 700, 
+                            fontSize: 13,
+                            color: v.stock <= 5 ? "#b5555c" : "var(--sage)"
+                          }}>
+                            {v.stock}
+                          </span>
+                        </div>
                       ))}
                     </div>
-                  ) : "—"}
-                </td>
-                <td style={tdStyle}>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    <Pencil size={16} style={{ cursor: "pointer" }} onClick={() => handleEdit(p)} />
-                    <Trash2 size={16} style={{ cursor: "pointer", color: "#b5555c" }} onClick={() => handleDelete(p.id)} />
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          // Desktop Table View
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13.5, minWidth: 600 }}>
+              <thead>
+                <tr style={{ background: "var(--sandalwood)", textAlign: "left" }}>
+                  <th style={thStyle}>Image</th>
+                  <th style={thStyle}>Name</th>
+                  <th style={thStyle}>Price</th>
+                  <th style={thStyle}>Stock</th>
+                  <th style={thStyle}>Colors</th>
+                  <th style={thStyle}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((p) => (
+                  <tr key={p.id} style={{ borderTop: "1px solid var(--line)" }}>
+                    <td style={tdStyle}>
+                      <div style={{ width: 44, height: 44, borderRadius: 6, overflow: "hidden", background: "var(--sandalwood)" }}>
+                        {p.imageUrl && <img src={p.imageUrl} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                      </div>
+                    </td>
+                    <td style={tdStyle}>{p.name}</td>
+                    <td style={tdStyle}>₹{p.price}</td>
+                    <td style={tdStyle}>
+                      <span style={{ color: p.stock <= 5 ? "#b5555c" : "var(--sage)", fontWeight: 600 }}>{p.stock}</span>
+                      {p.variants && p.variants.length > 0 && (
+                        <div style={{ fontSize: 11, color: "#666", marginTop: 4 }}>
+                          {p.variants.map(v => `${v.color}: ${v.stock}`).join(" | ")}
+                        </div>
+                      )}
+                    </td>
+                    <td style={tdStyle}>
+                      {(p.colors || []).length > 0 ? (
+                        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                          {(p.colors || []).map(c => (
+                            <span key={c} style={{ 
+                              background: "var(--sandalwood)", 
+                              padding: "2px 8px", 
+                              borderRadius: 4, 
+                              fontSize: 11,
+                              textTransform: "capitalize"
+                            }}>
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      ) : "—"}
+                    </td>
+                    <td style={tdStyle}>
+                      <div style={{ display: "flex", gap: 10 }}>
+                        <Pencil size={16} style={{ cursor: "pointer" }} onClick={() => handleEdit(p)} />
+                        <Trash2 size={16} style={{ cursor: "pointer", color: "#b5555c" }} onClick={() => handleDelete(p.id)} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
+      {/* Responsive Styles */}
+      <style>{`
+        @media (max-width: 768px) {
+          .admin-products {
+            padding: 0 0 10px 0 !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .admin-products {
+            padding: 0 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
-const labelStyle = { display: "block", fontSize: 12.5, fontWeight: 600, marginBottom: 5 };
-const inputStyle = { width: "100%", padding: "9px 12px", border: "1px solid var(--line)", borderRadius: 6, fontSize: 13.5, fontFamily: "inherit", boxSizing: "border-box" };
-const thStyle = { padding: "12px 14px", fontWeight: 700, fontSize: 12 };
-const tdStyle = { padding: "12px 14px" };
+const labelStyle = { 
+  display: "block", 
+  fontSize: 12.5, 
+  fontWeight: 600, 
+  marginBottom: 5 
+};
+
+const inputStyle = { 
+  width: "100%", 
+  padding: "9px 12px", 
+  border: "1px solid var(--line)", 
+  borderRadius: 6, 
+  fontSize: 13.5, 
+  fontFamily: "inherit", 
+  boxSizing: "border-box" 
+};
+
+const thStyle = { 
+  padding: "12px 14px", 
+  fontWeight: 700, 
+  fontSize: 12,
+  whiteSpace: "nowrap"
+};
+
+const tdStyle = { 
+  padding: "12px 14px",
+  verticalAlign: "middle"
+};
