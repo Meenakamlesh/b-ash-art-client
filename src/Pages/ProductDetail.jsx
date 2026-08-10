@@ -302,12 +302,16 @@ export default function ProductDetail() {
                 })}
               </div>
               
-              {/* Stock Status */}
+              {/* ✅ UPDATED: Stock Status with Better Display */}
               <div style={{ 
-                fontSize: 13, 
+                fontSize: 14, 
                 color: currentStock <= 5 ? "#b5555c" : "var(--sage)", 
                 marginTop: 10,
-                fontWeight: 500
+                fontWeight: 600,
+                background: currentStock <= 5 ? "#fbeaec" : "#f0f8f0",
+                padding: "8px 14px",
+                borderRadius: 6,
+                display: "inline-block"
               }}>
                 {currentStock > 0 ? (
                   currentStock <= 5 ? (
@@ -316,7 +320,7 @@ export default function ProductDetail() {
                     <span>✓ {currentStock} items in stock</span>
                   )
                 ) : (
-                  <span>✕ Out of stock in this color</span>
+                  <span style={{ color: "#b5555c" }}>✕ Out of stock</span>
                 )}
               </div>
             </div>
