@@ -302,7 +302,7 @@ export default function ProductDetail() {
                 })}
               </div>
               
-              {/* ✅ UPDATED: Stock Status with Better Display */}
+              {/* ✅ NEW - Stock Display in Product Detail */}
               <div style={{ 
                 fontSize: 14, 
                 color: currentStock <= 5 ? "#b5555c" : "var(--sage)", 

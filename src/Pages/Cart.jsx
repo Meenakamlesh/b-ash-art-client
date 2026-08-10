@@ -296,7 +296,7 @@ export default function Cart() {
                         <span style={{ fontSize: 13, color: "var(--text)" }}>{item.color}</span>
                       </div>
                     )}
-                    {/* ✅ NEW: Stock Display */}
+                    {/* ✅ NEW - Stock Display in Cart */}
                     {item.stock !== undefined && (
                       <div style={{ 
                         fontSize: 12, 
@@ -306,7 +306,7 @@ export default function Cart() {
                       }}>
                         {item.stock > 0 ? (
                           item.stock <= 5 ? (
-                            <span>⚠️ Only {item.stock} left in stock</span>
+                            <span>⚠️ Only {item.stock} left</span>
                           ) : (
                             <span>✓ {item.stock} in stock</span>
                           )
