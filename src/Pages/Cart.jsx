@@ -26,9 +26,11 @@ export default function Cart() {
   const handleQtyChange = (item, value) => {
     const newQty = parseInt(value);
     if (value === "") {
+      // Don't update if empty, but we'll handle blur
       return;
     }
     if (!isNaN(newQty) && newQty >= 1) {
+      // Calculate difference
       const diff = newQty - item.quantity;
       updateQuantity(item.productId, item.color, diff);
     }
@@ -294,25 +296,6 @@ export default function Cart() {
                           border: "1px solid rgba(0,0,0,0.1)"
                         }} />
                         <span style={{ fontSize: 13, color: "var(--text)" }}>{item.color}</span>
-                      </div>
-                    )}
-                    {/* ✅ NEW - Stock Display in Cart */}
-                    {item.stock !== undefined && (
-                      <div style={{ 
-                        fontSize: 12, 
-                        color: item.stock <= 5 ? "#b5555c" : "var(--sage)",
-                        marginTop: 3,
-                        fontWeight: 500
-                      }}>
-                        {item.stock > 0 ? (
-                          item.stock <= 5 ? (
-                            <span>⚠️ Only {item.stock} left</span>
-                          ) : (
-                            <span>✓ {item.stock} in stock</span>
-                          )
-                        ) : (
-                          <span style={{ color: "#b5555c" }}>✕ Out of stock</span>
-                        )}
                       </div>
                     )}
                   </div>

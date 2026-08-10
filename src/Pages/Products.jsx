@@ -94,6 +94,40 @@ export default function Products() {
     setFilters({ ...filters, [key]: value });
   };
 
+  // Get product stock info
+  const getProductStock = (product) => {
+    if (product.colors?.length > 0 && product.variants) {
+      const totalStock = product.variants.reduce((sum, variant) => sum + (variant.stock || 0), 0);
+      return totalStock;
+    }
+    return product.stock || 0;
+  };
+
+  // Get product stock status with simple labels
+  const getStockStatus = (product) => {
+    const stock = getProductStock(product);
+    if (stock <= 0) return { 
+      label: "Out of Stock", 
+      color: "#b5555c",
+      icon: "❌"
+    };
+    if (stock <= 5) return { 
+      label: `${stock} left`, 
+      color: "#e67e22",
+      icon: "⚠️"
+    };
+    if (stock <= 20) return { 
+      label: `${stock} in stock`, 
+      color: "#2e7d32",
+      icon: "📦"
+    };
+    return { 
+      label: "In Stock", 
+      color: "#2e7d32",
+      icon: "✅"
+    };
+  };
+
   return (
     <div style={{ 
       padding: "20px 16px 60px",
@@ -179,7 +213,7 @@ export default function Products() {
             )}
           </div>
 
-          {/* Filter Toggle Button - Mobile Friendly */}
+          {/* Filter Toggle Button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
             style={{
@@ -206,7 +240,7 @@ export default function Products() {
             }} />
           </button>
 
-          {/* Sort Dropdown - Mobile Friendly */}
+          {/* Sort Dropdown */}
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
@@ -231,7 +265,7 @@ export default function Products() {
             <option value="newest">Newest First</option>
           </select>
 
-          {/* View Toggle - Hide on mobile */}
+          {/* View Toggle */}
           <div className="view-toggle" style={{
             display: "flex",
             border: "1px solid var(--line)",
@@ -271,7 +305,7 @@ export default function Products() {
           </div>
         </div>
 
-        {/* Filters Panel - Mobile Friendly */}
+        {/* Filters Panel */}
         {showFilters && (
           <div style={{
             padding: "16px",
@@ -283,7 +317,6 @@ export default function Products() {
             gap: 12,
             animation: "slideDown 0.3s ease"
           }}>
-            {/* Category Filter */}
             <div>
               <label style={{ fontSize: "clamp(12px, 1.6vw, 13px)", fontWeight: 600, display: "block", marginBottom: 4 }}>
                 Category
@@ -309,7 +342,6 @@ export default function Products() {
               </select>
             </div>
 
-            {/* Price Range */}
             <div>
               <label style={{ fontSize: "clamp(12px, 1.6vw, 13px)", fontWeight: 600, display: "block", marginBottom: 4 }}>
                 Min Price (₹)
@@ -350,7 +382,6 @@ export default function Products() {
               />
             </div>
 
-            {/* Clear Filters */}
             <div style={{ display: "flex", alignItems: "flex-end" }}>
               <button
                 onClick={clearFilters}
@@ -453,9 +484,40 @@ export default function Products() {
           flexDirection: viewMode === "list" ? "column" : "none",
           gap: viewMode === "list" ? 12 : 16,
         }}>
-          {filteredProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+          {filteredProducts.map((p) => {
+            const stock = getProductStock(p);
+            const status = getStockStatus(p);
+            
+            return (
+              <div key={p.id} style={{ position: "relative" }}>
+                <ProductCard product={p} />
+                
+                {/* Stock Badge - Responsive positioning */}
+                <div className="stock-badge" style={{
+                  position: "absolute",
+                  top: "63%",
+                  right: "10px",
+                  padding: "3px 8px",
+                  borderRadius: "4px",
+                  fontSize: "10px",
+                  fontWeight: 600,
+                  background: status.color === "#b5555c" ? "#fbeaec" :
+                             status.color === "#e67e22" ? "#fff3cd" : "#d4edda",
+                  color: status.color,
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "3px",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+                  border: `1px solid ${status.color}30`,
+                  whiteSpace: "nowrap"
+                }}>
+                  <span style={{ fontSize: "10px" }}>{status.icon}</span>
+                  <span>{status.label}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -504,7 +566,7 @@ export default function Products() {
           }
         }
 
-        /* Grid responsive */
+        /* Grid responsive for product cards */
         @media (max-width: 600px) {
           .products-grid {
             grid-template-columns: repeat(2, 1fr) !important;
@@ -516,6 +578,39 @@ export default function Products() {
           .products-grid {
             grid-template-columns: 1fr 1fr !important;
             gap: 10px !important;
+          }
+        }
+
+        /* Fix stock badge position on mobile - make it visible */
+        @media (max-width: 768px) {
+          .stock-badge {
+            top: 60% !important;
+            right: 8px !important;
+            padding: 4px 10px !important;
+            font-size: 11px !important;
+            border-width: 2px !important;
+          }
+          .stock-badge span {
+            font-size: 11px !important;
+          }
+          .stock-badge span:first-child {
+            font-size: 12px !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .stock-badge {
+            top: 65% !important;
+            right: 5px !important;
+            padding: 3px 8px !important;
+            font-size: 10px !important;
+            border-width: 2px !important;
+          }
+          .stock-badge span {
+            font-size: 10px !important;
+          }
+          .stock-badge span:first-child {
+            font-size: 11px !important;
           }
         }
       `}</style>

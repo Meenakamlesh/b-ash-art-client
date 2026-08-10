@@ -81,6 +81,7 @@ export default function ProductDetail() {
   const currentVariant = product.variants?.find((v) => v.color === selectedColor);
   const currentStock = product.colors?.length > 0 ? (currentVariant?.stock ?? 0) : product.stock;
   const isOutOfStock = currentStock <= 0;
+  const isLowStock = currentStock > 0 && currentStock <= 5;
 
   const handleColorSelect = (color) => {
     setSelectedColor(color);
@@ -145,8 +146,7 @@ export default function ProductDetail() {
                 style={{ 
                   width: "100%", 
                   height: "100%", 
-                  objectFit: "cover",
-                  transition: "transform 0.3s ease"
+                  objectFit: "cover"
                 }} 
               />
             ) : (
@@ -172,8 +172,7 @@ export default function ProductDetail() {
                 padding: "6px 14px",
                 borderRadius: 20,
                 fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: 0.5
+                fontWeight: 600
               }}>
                 Out of Stock
               </div>
@@ -197,7 +196,6 @@ export default function ProductDetail() {
                     overflow: "hidden",
                     cursor: "pointer",
                     border: mainImage === img ? "2px solid var(--maroon)" : "2px solid var(--line)",
-                    transition: "border-color 0.2s ease",
                     background: "var(--sandalwood)"
                   }}
                 >
@@ -232,9 +230,38 @@ export default function ProductDetail() {
             fontSize: 26, 
             fontWeight: 700, 
             color: "var(--maroon)", 
-            marginBottom: 20 
+            marginBottom: 16 
           }}>
             ₹{product.price}
+          </div>
+
+          {/* Stock Availability - Simple & Clean */}
+          <div style={{ 
+            padding: "12px 16px", 
+            borderRadius: 8, 
+            marginBottom: 20,
+            background: isOutOfStock ? "#fbeaec" : isLowStock ? "#fff8e1" : "#e8f5e9",
+            border: `1px solid ${isOutOfStock ? "#f5c6cb" : isLowStock ? "#ffe0b2" : "#c8e6c9"}`
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 20 }}>
+                {isOutOfStock ? "❌" : isLowStock ? "⚠️" : "✅"}
+              </span>
+              <div>
+                <div style={{ 
+                  fontWeight: 600, 
+                  fontSize: 15,
+                  color: isOutOfStock ? "#b5555c" : isLowStock ? "#e67e22" : "#2e7d32"
+                }}>
+                  {isOutOfStock ? "Out of Stock" : isLowStock ? `Only ${currentStock} left!` : "In Stock"}
+                </div>
+                {currentStock > 0 && (
+                  <div style={{ fontSize: 13, color: "var(--muted)" }}>
+                    {currentStock} units available {selectedColor && `in ${selectedColor}`}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           {/* Colors */}
@@ -261,6 +288,7 @@ export default function ProductDetail() {
                 {product.colors.map((color) => {
                   const variant = product.variants?.find((v) => v.color === color);
                   const isAvailable = variant?.stock > 0;
+                  const stockCount = variant?.stock || 0;
                   return (
                     <button
                       key={color}
@@ -297,31 +325,18 @@ export default function ProductDetail() {
                       {selectedColor === color && (
                         <Check size={14} color="var(--maroon)" />
                       )}
+                      {isAvailable && stockCount <= 5 && (
+                        <span style={{
+                          fontSize: 10,
+                          color: "#e67e22",
+                          fontWeight: 600
+                        }}>
+                          ({stockCount} left)
+                        </span>
+                      )}
                     </button>
                   );
                 })}
-              </div>
-              
-              {/* ✅ NEW - Stock Display in Product Detail */}
-              <div style={{ 
-                fontSize: 14, 
-                color: currentStock <= 5 ? "#b5555c" : "var(--sage)", 
-                marginTop: 10,
-                fontWeight: 600,
-                background: currentStock <= 5 ? "#fbeaec" : "#f0f8f0",
-                padding: "8px 14px",
-                borderRadius: 6,
-                display: "inline-block"
-              }}>
-                {currentStock > 0 ? (
-                  currentStock <= 5 ? (
-                    <span>⚠️ Only {currentStock} items left in stock</span>
-                  ) : (
-                    <span>✓ {currentStock} items in stock</span>
-                  )
-                ) : (
-                  <span style={{ color: "#b5555c" }}>✕ Out of stock</span>
-                )}
               </div>
             </div>
           )}
@@ -371,7 +386,6 @@ export default function ProductDetail() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: 18,
                       transition: "background 0.2s ease"
                     }}
                     onMouseEnter={(e) => e.target.style.background = "var(--sandalwood)"}
@@ -379,7 +393,7 @@ export default function ProductDetail() {
                   >
                     <Minus size={16} />
                   </button>
-                  <span className="val" style={{ 
+                  <span style={{ 
                     minWidth: 36, 
                     textAlign: "center", 
                     fontWeight: 700,
@@ -399,7 +413,6 @@ export default function ProductDetail() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: 18,
                       opacity: qty < currentStock ? 1 : 0.5,
                       transition: "background 0.2s ease"
                     }}
@@ -412,7 +425,7 @@ export default function ProductDetail() {
                   </button>
                 </div>
                 {qty === currentStock && (
-                  <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 6 }}>
+                  <div style={{ fontSize: 12, color: "#e67e22", marginTop: 6 }}>
                     Max quantity reached
                   </div>
                 )}
@@ -475,15 +488,6 @@ export default function ProductDetail() {
           
           .product-detail-grid > div:last-child > div:first-child {
             font-size: 22px !important;
-          }
-          
-          .color-swatch-btn {
-            padding: 4px 12px 4px 4px !important;
-          }
-          
-          .color-swatch-btn span:first-child {
-            width: 20px !important;
-            height: 20px !important;
           }
         }
 
