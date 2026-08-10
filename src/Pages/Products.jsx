@@ -600,8 +600,8 @@ export default function Products() {
 
         @media (max-width: 480px) {
           .stock-badge {
-            top: 65% !important;
-            right: 5px !important;
+            top: 75% !important;
+            right: 20px !important;
             padding: 3px 8px !important;
             font-size: 10px !important;
             border-width: 2px !important;
