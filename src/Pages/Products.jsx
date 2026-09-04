@@ -495,7 +495,7 @@ export default function Products() {
                 {/* Stock Badge - Responsive positioning */}
                 <div className="stock-badge" style={{
                   position: "absolute",
-                  top: "63%",
+                  top: "50%",
                   right: "10px",
                   padding: "3px 8px",
                   borderRadius: "4px",
