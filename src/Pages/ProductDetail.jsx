@@ -298,7 +298,7 @@ export default function ProductDetail() {
                         display: "flex",
                         alignItems: "center",
                         gap: 8,
-                        padding: "6px 14px 6px 6px",
+                        padding: "8px 16px",
                         borderRadius: 20,
                         border: selectedColor === color ? "2px solid var(--maroon)" : "1px solid var(--line)",
                         background: "#fff",
@@ -307,14 +307,6 @@ export default function ProductDetail() {
                         transition: "all 0.2s ease"
                       }}
                     >
-                      <span style={{
-                        display: "inline-block",
-                        width: 24,
-                        height: 24,
-                        borderRadius: "50%",
-                        background: color.toLowerCase(),
-                        border: "1px solid var(--line)"
-                      }} />
                       <span style={{ 
                         fontSize: 13, 
                         textTransform: "capitalize",
