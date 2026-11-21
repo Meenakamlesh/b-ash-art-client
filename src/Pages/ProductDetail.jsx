@@ -253,7 +253,7 @@ export default function ProductDetail() {
                   fontSize: 15,
                   color: isOutOfStock ? "#b5555c" : isLowStock ? "#e67e22" : "#2e7d32"
                 }}>
-                  {isOutOfStock ? "Out of Stock" : isLowStock ? `Only ${currentStock} left!` : "In Stock"}
+                  {isOutOfStock ? "`Out of Stock" : isLowStock ? `Only ${currentStock} left!` : "In Stock"}
                 </div>
                 {currentStock > 0 && (
                   <div style={{ fontSize: 13, color: "var(--muted)" }}>
